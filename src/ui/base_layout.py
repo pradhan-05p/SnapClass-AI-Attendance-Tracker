@@ -5,7 +5,7 @@ def style_background_home():
         """
         <style>
         .stApp {
-            background-color: #655ADA !important;
+            background-color: #5965F1 !important;
         }
         
         .stApp div[data-testid="stColumn"] {
@@ -24,7 +24,7 @@ def style_background_dashboard():
         """
         <style>
         .stApp {
-            background-color: #D391FA !important;
+            background-color: #E1E3FE !important;
         }
         </style>
         """,
@@ -41,7 +41,8 @@ def style_base_layout():
 
         /* Hide toolbar and footer */
         #MainMenu,footer,header {
-            visibility: hidden;
+            /* visibility: hidden; */
+            visibility: hidden; 
             }
 
         .block-container {
@@ -63,7 +64,7 @@ def style_base_layout():
             }
 
         button[kind="primary"]{
-            background-color: #190087 !important;
+            background-color: #5965F1 !important;
             color: #E0E3FF !important;
             border: none !important;
             border-radius: 1.5rem !important;
@@ -72,7 +73,7 @@ def style_base_layout():
             transition: transform 0.3s ease-in-out !important;
         }
         button[kind="secondary"]{
-            background-color: #DA2C9E !important;
+            background-color: #E8449E !important;
             color: #E0E3FF !important;
             border: none !important;
             border-radius: 1.5rem !important;
@@ -87,11 +88,11 @@ def style_base_layout():
             border-radius: 1.5rem !important;
             color: white !important;
             padding: 10px 20px !important;
-            transition: transform 0.3s ease-in-out !important;
+            transition: transform 0.25s ease-in-out !important;
         }
 
         button:hover {
-            transform: scale(1.1) !important;
+            transform: scale(1.09) !important;
             }
         
         </style>
