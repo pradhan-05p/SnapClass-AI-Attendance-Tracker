@@ -23,3 +23,8 @@ Pillow
 
 # Frontend Libraries
 streamlit
+
+#voice libraries
+librosa
+# resemblyzer
+speechbrain

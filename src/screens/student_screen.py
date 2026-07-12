@@ -5,6 +5,9 @@ from src.components.header import header_dashboard
 from src.ui.base_layout import style_base_layout, style_background_dashboard
 from src.components.footer import footer_home_dashboard
 
+from PIL import Image
+import numpy as np
+
 def student_screen():
     style_background_dashboard()
     style_base_layout()
@@ -18,7 +21,8 @@ def student_screen():
             st.rerun() 
     st.space()
     st.header("Login using FaceID",text_alignment="center")
-    st.camera_input("Position your face in front of the camera and click on the button below to login")
-    
+    photo_sorce = st.camera_input("Position your face in front of the camera and click on the button below to login")
+    if photo_sorce:
+        np.array(Image.open(photo_sorce))
     st.divider()
     footer_home_dashboard()
