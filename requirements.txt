@@ -26,5 +26,5 @@ streamlit
 
 #voice libraries
 librosa
-# resemblyzer
-speechbrain
+resemblyzer
+

@@ -42,14 +42,14 @@ def get_trained_model():
             y.append(student.get("student_id"))
             
     if len(x) == 0:
-        return 0
+        return None
     
     classifier = SVC(kernel='linear', probability=True)
     try:
         classifier.fit(x, y)
     except Exception as e:
         st.error(f"Error training the model: {e}")
-        pass
+        return None
     
     return {'classifier': classifier, 'x': x, 'y': y}
 
@@ -92,6 +92,6 @@ def predict_attendance(class_image_np):
         if best_match_score <= resemblance_threshold:
             detected_students[predicted_id] = True
         
-        return detected_students, all_students, len(encodings)
+    return detected_students, all_students, len(encodings)
     
     

@@ -1,26 +1,27 @@
 import streamlit as st
 import numpy as np
 import librosa
-from speechbrain.inference.speaker import EncoderClassifier
+# from speechbrain.inference.speaker import EncoderClassifier
+from resemblyzer import VoiceEncoder,preprocess_wav
 import io
-import torch
 
 @st.cache_resource
 def load_voice_encoder():
-    return EncoderClassifier.from_hparams(source="speechbrain/spkrec-ecapa-voxceleb")
+    return VoiceEncoder()
     
     
 def get_voice_embedding(audio_bytes):
     try:
         encoder = load_voice_encoder()
-        wav, _ = librosa.load(io.BytesIO(audio_bytes),sr=16000,mono=True) 
-        wav_tensor = torch.tensor(wav).unsqueeze(0)
-        with torch.no_grad():
-            embeddings = encoder.encode_batch(wav_tensor)
-        return embeddings.squeeze().detach().numpy().tolist()
+        audio, sr = librosa.load(io.BytesIO(audio_bytes),sr=16000,mono=True) 
+        wav= preprocess_wav(audio)
+        embeddings = encoder.embed_utterance(wav)
+        print("Embedding length:", len(embeddings.squeeze()))
+        print("First 5:", embeddings.squeeze()[:5])
+        return embeddings.tolist()
     
     except Exception as e:
-        st.error(f"Error extracting voice embedding: {e}")
+        st.error(f"Error processing audio: {e}")
         return None
 
 
@@ -47,15 +48,16 @@ def identify_speaker(new_embedding,candidate_dict,threshold=0.65):
 def process_bluk_audio(audio_bytes,candidate_dict,threshold=0.65):
     try:
         encoder = load_voice_encoder()
-        wav, _ = librosa.load(io.BytesIO(audio_bytes),sr=16000,mono=True) 
+        wav, sr= librosa.load(io.BytesIO(audio_bytes),sr=16000,mono=True) 
         segments = librosa.effects.split(wav, top_db=30)
         
         identified_sid = {}
         for start, end in segments:
-            segment_wav = wav[start:end]
-            segment_tensor = torch.tensor(segment_wav).unsqueeze(0)
-            with torch.no_grad():
-                embeddings = encoder.encode_batch(segment_tensor).squeeze().detach().cpu().numpy()
+            if end - start < sr * 0.5:  # Skip segments shorter than 1 second
+                continue
+            segment_audio = wav[start:end]
+            wav = preprocess_wav(segment_audio)
+            embeddings = encoder.embed_utterance(wav)
             
             sid, score = identify_speaker(embeddings, candidate_dict, threshold)
             if sid not in identified_sid or score > identified_sid[sid]:
