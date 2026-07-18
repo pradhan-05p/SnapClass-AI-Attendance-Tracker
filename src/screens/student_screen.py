@@ -33,7 +33,6 @@ def student_screen():
         if st.button("Back to Home", type="secondary", key="loginBackHome", icon=":material/arrow_back:", icon_position="right"):
             st.session_state['login_type'] = None
             st.rerun() 
-    st.space()
     
     show_registeration = False
     

@@ -7,11 +7,13 @@ from src.components.footer import footer_home_dashboard
 
 from src.database.db import check_teacher_exists, create_teacher, teacher_login
 
+from src.screens.teacher_access import teacher_tab_take_attendance, teacher_tab_manage_attendance, teacher_tab_attendance_logs
+
 def teacher_screen():
     style_background_dashboard()
     style_base_layout()
     
-    if 'teacher_data' in st.session_state and st.session_state.teacher_data:
+    if 'teacher_data' in st.session_state:
         teacher_dashboard_after_login()
     elif 'teacher_login_type' not in st.session_state or st.session_state.teacher_login_type=='login':
         teacher_screen_login()
@@ -33,7 +35,51 @@ def dashboard_teacher():
 
 def teacher_dashboard_after_login():
     teacher = st.session_state.teacher_data
-    st.header(f"Welcome, {teacher['name']}!", text_alignment="center")
+    c1, c2 = st.columns(2, gap="xxlarge",vertical_alignment="center")
+    with c1:
+        header_dashboard()
+    with c2:
+        st.subheader(f"Welcome, {teacher['name']}!")
+        if st.button("LogOut", type="secondary", icon=":material/arrow_back:", icon_position="right"):
+            st.session_state.is_logged_in = False
+            del st.session_state['teacher_data']
+            st.rerun() 
+            
+        st.space()
+
+    if 'current_teacher_tab' not in st.session_state:
+        st.session_state.current_teacher_tab = 'Take Attendance'
+    st.divider()
+    tab1,tab2,tab3 = st.columns(3,gap="small")
+        
+    with tab1:
+        type1 = "primary" if st.session_state.current_teacher_tab == 'Take Attendance' else "tertiary"
+        if st.button("Take Attendance", type=type1, width="stretch", icon=":material/ar_on_you:", icon_position="right"):
+            st.session_state.current_teacher_tab = 'Take Attendance'
+            st.rerun()
+    with tab2:
+        type2 = "primary" if st.session_state.current_teacher_tab == 'Manage Attendance' else "tertiary"
+        if st.button("Manage Attendance", type=type2, width="stretch", icon=":material/book_ribbon:", icon_position="right"):
+            st.session_state.current_teacher_tab = 'Manage Attendance'
+            st.rerun()
+    with tab3:
+        type3 = "primary" if st.session_state.current_teacher_tab == 'Attendance Logs' else "tertiary"
+        if st.button("Attendance Logs", type=type3, width="stretch", icon=":material/cards_stack:", icon_position="right"):
+            st.session_state.current_teacher_tab = 'Attendance Logs'
+            st.rerun()
+            
+
+    if st.session_state.current_teacher_tab == 'Take Attendance':
+        teacher_tab_take_attendance()
+    if st.session_state.current_teacher_tab == 'Manage Attendance':
+        teacher_tab_manage_attendance()
+    if st.session_state.current_teacher_tab == 'Attendance Logs':
+        teacher_tab_attendance_logs()
+    
+    
+        
+    
+    footer_home_dashboard()
     
 
 
