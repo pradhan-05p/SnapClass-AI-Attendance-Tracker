@@ -50,7 +50,7 @@ def student_dashboard_after_login():
             if sid not in stats_map:
                 stats_map[sid] = {'total': 0, 'present': 0}
             stats_map[sid]['total'] += 1
-            if log.get('is_present'):
+            if log.get('ispresent'):
                 stats_map[sid]['present'] += 1
         
         cols = st.columns(2)

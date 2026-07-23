@@ -102,6 +102,10 @@ def get_student_subjects(student_id):
     return response.data
 
 
-def crete_attendance_logs(logs):
+def create_attendance_logs(logs):
     response = supabase.table("attendance_logs").insert(logs).execute()
+    return response.data
+
+def get_teacher_attendance_logs(teacher_id):
+    response = supabase.table("attendance_logs").select("*, subjects!inner(*)").eq("subjects.teacher_id", teacher_id).execute()
     return response.data

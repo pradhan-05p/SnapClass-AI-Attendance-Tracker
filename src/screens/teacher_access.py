@@ -12,6 +12,7 @@ from src.components.attendance_to_result_dialouge import attendance_result_dialo
 from src.pipelines.face_pipeline import predict_attendance
 from src.database.config import supabase
 from src.components.voice_attendance import voice_attendance_dialogue
+from src.database.db import get_teacher_attendance_logs
 
 from datetime import datetime
 
@@ -98,7 +99,6 @@ def teacher_tab_take_attendance():
         if st.button("Voice Attendance",type="tertiary",icon=":material/mic:",width="stretch"):
             voice_attendance_dialogue(selected_subject_id)
         
-    
 
 def teacher_tab_manage_attendance():
     teacher_id = st.session_state.teacher_data['teacher_id']
@@ -136,7 +136,45 @@ def teacher_tab_manage_attendance():
     
 
 def teacher_tab_attendance_logs():
-    st.subheader("Attendance Logs")
-    st.write("This is the Attendance Logs tab. Here you can view attendance logs.")
-    # Add your code for viewing attendance logs here
- 
+    st.header("Attendance Logs")
+    
+    teacher_id = st.session_state.teacher_data.get('teacher_id')
+    
+    records = get_teacher_attendance_logs(teacher_id)
+    
+    if not records:
+        st.info("No attendance logs found.", icon="ℹ️")
+        return
+
+    data = []
+    
+    for r in records:
+        ts = r.get('timestamp')
+        data.append({
+            'ts_group': ts.split(".")[0] if ts else "N/A",
+            'time': datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N/A",
+            'subject': r['subjects']['name'] if r.get('subjects') else "N/A",
+            'subject_code': r['subjects']['subject_code'] if r.get('subjects') else "N/A",
+            'ispresent': bool(r.get('ispresent', False))
+        })
+    
+    df = pd.DataFrame(data)
+    
+    summary =(
+        df.groupby(['ts_group', 'time', 'subject', 'subject_code'])
+        .agg(
+            Present_Count=('ispresent','sum'),
+            Total_Count=('ispresent','count')
+        ).reset_index()
+    ) 
+    
+    
+    summary['Attendance Stats'] = (
+        "✅" + summary['Present_Count'].astype(str) + " / " + summary['Total_Count'].astype(str)
+    )
+    
+    display_df = (summary.sort_values(by='ts_group', ascending=False)
+                  [['time', 'subject', 'subject_code', 'Attendance Stats']])
+    
+    st.dataframe(display_df, hide_index=True, width='stretch')
+    

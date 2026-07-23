@@ -20,22 +20,22 @@ def auto_enroll_diaglogue(join_code):
         if st.button("Got it", type="primary"):
             st.query_params.clear()
             st.rerun()
-    st.markdown(f"Would you like to enroll in {subject['name']}(Code: {subject['subject_code']})?")
     
-    
-    c1, c2 = st.columns(2)
-    
-    with c1:
-        if st.button("No thanks", type="primary"):
-            st.query_params.clear()
-            st.rerun()
-    with c2:
-        if st.button("Yes Enroll Now", type="primary"):
-            enroll_student_to_subject(student_id, subject['subject_id'])
-            st.success(f"You have successfully enrolled in {subject['name']}!", icon="✅")
-            time.sleep(1)
-            st.query_params.clear()
-            st.rerun()
+    else:        
+        st.markdown(f"Would you like to enroll in {subject['name']}(Code: {subject['subject_code']})?")
+        c1, c2 = st.columns(2)
+        
+        with c1:
+            if st.button("No thanks", type="primary"):
+                st.query_params.clear()
+                st.rerun()
+        with c2:
+            if st.button("Yes Enroll Now", type="primary"):
+                enroll_student_to_subject(student_id, subject['subject_id'])
+                st.success(f"You have successfully enrolled in {subject['name']}!", icon="✅")
+                time.sleep(1)
+                st.query_params.clear()
+                st.rerun()
     
     
     

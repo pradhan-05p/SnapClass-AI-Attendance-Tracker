@@ -1,5 +1,5 @@
 import streamlit as st
-from src.database.db import crete_attendance_logs
+from src.database.db import create_attendance_logs
 import time
 @st.dialog(title="Attendance Reports")
 def attendance_result_dialouge(df,logs):
@@ -15,7 +15,7 @@ def attendance_result_dialouge(df,logs):
     with col2:
         if st.button("Confirm & Save",type="primary"):
             try:
-                crete_attendance_logs(logs)
+                create_attendance_logs(logs)
                 st.toast("Attendance logs saved successfully!",icon="✅")
                 time.sleep(1)
                 st.session_state.attendance_image = []
