@@ -19,7 +19,7 @@ from datetime import datetime
 from src.database.db import get_teacher_subjects
 def teacher_tab_take_attendance():
     teacher_id = st.session_state.teacher_data['teacher_id']
-    st.subheader("Take AI Attendance")
+    st.header("Take AI Attendance")
     if 'attendance_image' not in st.session_state:
         st.session_state.attendance_image = []
         
@@ -177,4 +177,5 @@ def teacher_tab_attendance_logs():
                   [['time', 'subject', 'subject_code', 'Attendance Stats']])
     
     st.dataframe(display_df, hide_index=True, width='stretch')
+
     

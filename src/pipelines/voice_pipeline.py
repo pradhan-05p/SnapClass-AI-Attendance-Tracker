@@ -34,7 +34,7 @@ def identify_speaker(new_embedding,candidate_dict,threshold=0.65):
     
     for sid, stored_embedding in candidate_dict.items():
         if stored_embedding:
-            similarity = np.dot(new_embedding, stored_embedding)
+            similarity = np.dot(new_embedding / np.linalg.norm(new_embedding),stored_embedding / np.linalg.norm(stored_embedding))
             if similarity > best_score:
                 best_score = similarity
                 best_sid = sid
@@ -45,7 +45,7 @@ def identify_speaker(new_embedding,candidate_dict,threshold=0.65):
         return None, best_score
     
     
-def process_bluk_audio(audio_bytes,candidate_dict,threshold=0.65):
+def process_bulk_audio(audio_bytes,candidate_dict,threshold=0.65):
     try:
         encoder = load_voice_encoder()
         wav, sr= librosa.load(io.BytesIO(audio_bytes),sr=16000,mono=True) 
@@ -53,20 +53,22 @@ def process_bluk_audio(audio_bytes,candidate_dict,threshold=0.65):
         
         identified_sid = {}
         for start, end in segments:
-            if end - start < sr * 0.5:  # Skip segments shorter than 1 second
+            if end - start < (sr * 0.5):  # Skip segments shorter than 1 second
                 continue
-            segment_audio = wav[start:end]
-            wav = preprocess_wav(segment_audio)
-            embeddings = encoder.embed_utterance(wav)
+            segment_audio = wav[start:end]          # always slices original `wav`
+            processed = preprocess_wav(segment_audio)  # new variable, doesn't clobber wav
+            if len(processed) == 0:
+                continue
+            embeddings = encoder.embed_utterance(processed)
             
             sid, score = identify_speaker(embeddings, candidate_dict, threshold)
-            if sid not in identified_sid or score > identified_sid[sid]:
+            if sid is not None and (sid not in identified_sid or score > identified_sid[sid]):
                 identified_sid[sid] = score
                 
         return identified_sid
     
     except Exception as e:
-        st.error(f"Error Bluk processing audio: {e}")
+        st.error(f"Error Bulk processing audio: {e}")
         return {}
             
 

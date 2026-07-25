@@ -14,20 +14,38 @@ from src.database.db import get_all_students,create_student,get_student_attendan
 from src.components.enroll_subject import enroll_diaglogue
 from src.components.subject_card import subject_card
 
+# from src.components.confirm_detele_profile_student import confirm_delete_profile_student
 
 def student_dashboard_after_login():
     student = st.session_state.student_data
     student_id = student['student_id']
+    st.header(f"Welcome, {student['name']}!😎",text_alignment="center")
     c1, c2 = st.columns(2, gap="xxlarge",vertical_alignment="center")
     with c1:
         header_dashboard()
     with c2:
-        st.subheader(f"Welcome, {student['name']}!")
-        if st.button("LogOut", type="secondary", icon=":material/arrow_back:", icon_position="right"):
-            st.session_state.is_logged_in = False
-            del st.session_state['student_data']
-            st.rerun() 
-        st.space()
+        c1, c2 = st.columns(2, gap="xxsmall",vertical_alignment="center",width="stretch")
+        with c1:
+            st.markdown("<div style='height: 28px;'></div>",unsafe_allow_html=True)
+            if st.button("LogOut", type="secondary", icon=":material/arrow_back:", icon_position="right"):
+                st.session_state.is_logged_in = False
+                del st.session_state['student_data']
+                st.rerun() 
+            st.space()
+        with c2:
+            if st.button("Refresh", type="secondary", icon=":material/refresh:", icon_position="right"):
+                with st.spinner("Refreshing your dashboard..."):
+                    time.sleep(1)
+                    st.toast("Dashboard refreshed successfully!", icon="✅")
+                    st.rerun()
+                    
+        # Under Maintenance: Delete profile feature is temporarily disabled for students.
+        # if st.button("Delete profile", type="tertiary", icon=":material/arrow_back:", icon_position="right",width="stretch"):
+        #     confirm_delete_profile_student()
+        #     del st.session_state['student_data']
+        #     st.cache_data.clear()
+        #     st.cache_resource.clear()
+        #     st.rerun()
     
     c1, c2 = st.columns(2, gap="large")
     with c1:
@@ -77,7 +95,7 @@ def student_dashboard_after_login():
                     ],
                     footer_callback= uneroll_subject
                 )
-
+                    
     footer_home_dashboard()
 
 def student_screen():

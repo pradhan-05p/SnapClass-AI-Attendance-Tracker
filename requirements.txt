@@ -1,3 +1,6 @@
+# Frontend Libraries
+streamlit
+
 # Utility libraries
 numpy
 pandas
@@ -21,10 +24,8 @@ segno
 Pillow
 
 
-# Frontend Libraries
-streamlit
+
 
 #voice libraries
 librosa
 resemblyzer
-

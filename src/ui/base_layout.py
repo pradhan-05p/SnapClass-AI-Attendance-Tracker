@@ -41,7 +41,7 @@ def style_base_layout():
 
         /* Hide toolbar and footer */
         #MainMenu,footer,header {
-            /* visibility: hidden; */
+            visibility: hidden; 
  
             }
 

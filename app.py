@@ -7,6 +7,11 @@ from src.screens.student_screen import student_screen
 from src.components.auto_enroll import auto_enroll_diaglogue
 
 def main():
+    st.set_page_config(
+        page_title="SnapClass - AI Attendance Tracker", 
+        page_icon="https://i.ibb.co/YTYGn5qV/logo.png",
+        layout="centered"
+        )
     if 'login_type' not in st.session_state:
         st.session_state['login_type'] = None
 

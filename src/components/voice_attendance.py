@@ -3,7 +3,7 @@ import time
 import pandas as pd
 from datetime import datetime
 from src.database.config import supabase
-from src.pipelines.voice_pipeline import process_bluk_audio
+from src.pipelines.voice_pipeline import process_bulk_audio
 from src.components.attendance_voice_dialouge import attendance_result_dialouge
 
 @st.dialog(title="Voice Attendance")
@@ -31,7 +31,7 @@ def voice_attendance_dialogue(selected_subject_id):
                 return
 
             candidate_dict = {
-                s['students']['student_id']: s['students']['voice_embeddings']
+                int(s['students']['student_id']): s['students']['voice_embeddings']
                 for s in enrolled_students if s.get('students') and s['students'].get('voice_embeddings')
             }
             if not candidate_dict:
@@ -39,7 +39,7 @@ def voice_attendance_dialogue(selected_subject_id):
                 return
 
             audio_bytes = audio_data.read()
-            detected_scores = process_bluk_audio(audio_bytes, candidate_dict)
+            detected_scores = process_bulk_audio(audio_bytes, candidate_dict)
 
             results, attendance_logs = [], []
             current_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")

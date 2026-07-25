@@ -50,7 +50,9 @@ def create_student(name, face_embeddings=None, voice_embeddings=None):
     response = supabase.table("students").insert(data).execute()
     return response.data
 
-
+def delete_student(student_id):
+    response = supabase.table("students").delete().eq("student_id", student_id).execute()
+    return response.data
 
 
 # subjects:-
