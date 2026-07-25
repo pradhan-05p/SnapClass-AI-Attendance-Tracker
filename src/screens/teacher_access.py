@@ -1,3 +1,4 @@
+import pytz
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -76,7 +77,9 @@ def teacher_tab_take_attendance():
                     st.warning("No students are enrolled in this subject.", icon="⚠️")
                 else:
                     results,attendance_logs = [],[]
-                    current_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                    
+                    ist_timezone = pytz.timezone('Asia/Kolkata')
+                    current_timestamp = datetime.now(ist_timezone).strftime("%Y-%m-%dT%H:%M:%S")
                     
                     for node in enrolled_students:
                         student = node['students']

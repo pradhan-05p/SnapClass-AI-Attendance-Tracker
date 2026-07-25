@@ -2,6 +2,7 @@ import streamlit as st
 import time
 import pandas as pd
 from datetime import datetime
+import pytz
 from src.database.config import supabase
 from src.pipelines.voice_pipeline import process_bulk_audio
 from src.components.attendance_voice_dialouge import attendance_result_dialouge
@@ -42,7 +43,8 @@ def voice_attendance_dialogue(selected_subject_id):
             detected_scores = process_bulk_audio(audio_bytes, candidate_dict)
 
             results, attendance_logs = [], []
-            current_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+            ist_timezone = pytz.timezone('Asia/Kolkata')
+            current_timestamp = datetime.now(ist_timezone).strftime("%Y-%m-%dT%H:%M:%S")
 
             for node in enrolled_students:
                 student = node['students']

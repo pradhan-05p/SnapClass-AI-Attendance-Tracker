@@ -33,7 +33,7 @@ def student_dashboard_after_login():
                 st.rerun() 
             st.space()
         with c2:
-            if st.button("Refresh", type="secondary", icon=":material/refresh:", icon_position="right"):
+            if st.button("Refresh", type="primary", icon=":material/refresh:", icon_position="right",width="stretch"):
                 with st.spinner("Refreshing your dashboard..."):
                     time.sleep(1)
                     st.toast("Dashboard refreshed successfully!", icon="✅")

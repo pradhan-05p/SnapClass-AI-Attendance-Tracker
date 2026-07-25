@@ -29,9 +29,17 @@ def dashboard_teacher():
         header_dashboard()
     
     with c2:
-        if st.button("Back to Home", type="secondary", key="loginBackHome", icon=":material/arrow_back:", icon_position="right"):
-            st.session_state['login_type'] = None
-            st.rerun() 
+        col1, col2 = st.columns(2, gap="xsmall",vertical_alignment="center")
+        with col1:
+            if st.button("Back toHome", type="secondary", key="loginBackHome", icon=":material/arrow_back:", icon_position="right",width="stretch"):
+                st.session_state['login_type'] = None
+                st.rerun()
+        with col2:
+            if st.button("Refresh", type="primary", icon=":material/refresh:", icon_position="right",width="stretch"):
+                with st.spinner("Refreshing your dashboard..."):
+                    time.sleep(1)
+                    st.toast("Dashboard refreshed successfully!", icon="✅")
+                    st.rerun()
 
 
 
