@@ -50,10 +50,18 @@ def teacher_dashboard_after_login():
     with c1:
         header_dashboard()
     with c2:
-        if st.button("LogOut", type="secondary", icon=":material/arrow_back:", icon_position="right"):
-            st.session_state.is_logged_in = False
-            del st.session_state['teacher_data']
-            st.rerun() 
+        col1, col2 = st.columns(2, gap="xsmall",vertical_alignment="center")
+        with col1:
+            if st.button("LogOut", type="secondary", icon=":material/arrow_back:", icon_position="right"):
+                st.session_state.is_logged_in = False
+                del st.session_state['teacher_data']
+                st.rerun() 
+        with col2:
+            if st.button("Refresh", type="primary", icon=":material/refresh:", icon_position="right"):
+                with st.spinner("Refreshing your dashboard..."):
+                    time.sleep(1)
+                    st.toast("Dashboard refreshed successfully!", icon="✅")
+                    st.rerun()
             
         st.space()
 
