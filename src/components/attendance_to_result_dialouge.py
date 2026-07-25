@@ -15,10 +15,15 @@ def attendance_result_dialouge(df,logs):
     with col2:
         if st.button("Confirm & Save",type="primary"):
             try:
-                create_attendance_logs(logs)
-                st.toast("Attendance logs saved successfully!",icon="✅")
-                time.sleep(1)
-                st.session_state.attendance_image = []
-                st.rerun()
+                resp = create_attendance_logs(logs)
+                if resp:
+                    st.toast("Attendance logs saved successfully!",icon="✅")
+                    st.session_state.attendance_save_success = True
+                    time.sleep(1)
+                    st.session_state.attendance_image = []
+                    st.rerun()
+                else:
+                    st.session_state.attendance_save_success = False
+                    st.error("Failed to save attendance logs — insert returned no data.", icon="❌")
             except Exception as e:
                 st.error(f"An error occurred while saving attendance: {e}", icon="❌")
