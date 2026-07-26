@@ -5,6 +5,14 @@ from src.database.config import supabase
 from src.database.db import enroll_student_to_subject
 from PIL import Image  
 
+
+MAX_DIM = 800  # tune down to 800 if still crashing
+
+def load_and_resize(file):
+    img = Image.open(file)
+    img.thumbnail((MAX_DIM, MAX_DIM))   # shrinks in place, keeps aspect ratio
+    return img.convert("RGB")
+
 @st.dialog(title="Capture/ Upload Photos")
 def add_photos_dialogue():
     st.write("Please capture or upload photos for the subject.")
@@ -25,7 +33,7 @@ def add_photos_dialogue():
     if st.session_state.photo_tab == 'camera':
         camera_photo= st.camera_input("Take Snapshots of the classroom",key="camera_dialouge")
         if camera_photo:
-            st.session_state.attendance_image.append(Image.open(camera_photo))
+            st.session_state.attendance_image.append(load_and_resize(camera_photo))
             st.toast("Photo Captured successfully!", icon="✅")
             st.rerun()
             
@@ -37,7 +45,7 @@ def add_photos_dialogue():
         if uploaded_photos:
             for photo in set(uploaded_photos):
                 if photo not in st.session_state.processed_file_ids:
-                    st.session_state.attendance_image.append(Image.open(photo))
+                    st.session_state.attendance_image.append(load_and_resize(photo))
                     st.session_state.processed_file_ids.add(photo)
 
             st.toast(f"{len(uploaded_photos)} photo(s) uploaded successfully!", icon="✅")
