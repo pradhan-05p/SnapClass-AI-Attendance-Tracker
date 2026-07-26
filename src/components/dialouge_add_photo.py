@@ -35,7 +35,7 @@ def add_photos_dialogue():
             st.session_state.processed_file_ids = set()
 
         if uploaded_photos:
-            for photo in uploaded_photos:
+            for photo in set(uploaded_photos):
                 if photo not in st.session_state.processed_file_ids:
                     st.session_state.attendance_image.append(Image.open(photo))
                     st.session_state.processed_file_ids.add(photo)
