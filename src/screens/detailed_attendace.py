@@ -23,7 +23,7 @@ def get_subject_attendance(subject_id, target_date) -> pd.DataFrame:
     )
     
     if not enrolled_resp.data:
-        st.warning(f"No students found enrolled for subject_id={subject_id}")
+        st.warning(f"No students found enrolled for subject ={subject_id}")
         return pd.DataFrame(columns=["student_id", "name", "status","timestamp"])
 
     students_df = pd.DataFrame([

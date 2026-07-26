@@ -30,12 +30,19 @@ def add_photos_dialogue():
             st.rerun()
             
     if st.session_state.photo_tab == 'upload':
-        uploaded_photos = st.file_uploader("Upload photos", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+        uploaded_photos = st.file_uploader("Upload photos", type=["jpg", "jpeg", "png"], accept_multiple_files=True,key="upload_dialouge")
+        if "processed_file_ids" not in st.session_state:
+            st.session_state.processed_file_ids = set()
+
         if uploaded_photos:
-            for photo in uploaded_photos:
+            new_count = 0
+        for photo in uploaded_photos:
+            if photo not in st.session_state.processed_file_ids:
                 st.session_state.attendance_image.append(Image.open(photo))
-            st.toast("Photos uploaded successfully!", icon="✅")
-    
+                st.session_state.processed_file_ids.add(photo)
+                new_count += 1
+        if new_count:
+            st.toast(f"{new_count} photo(s) uploaded successfully!", icon="✅")
     st.divider()
     if st.button("Done", type="primary",width='stretch'):
         st.rerun()
