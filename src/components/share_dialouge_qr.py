@@ -3,7 +3,7 @@ import segno
 import io
 @st.dialog(title="Share Subject Code")
 def share_sub_dialogue(subject_code, subject_name):
-    app_domain = "snapclass-main-p.streamlit.app"
+    app_domain = "snapclass-main-attend.streamlit.app"
     join_url = f"{app_domain}?join-code={subject_code}"
     
     st.write(f"Scan to join")
